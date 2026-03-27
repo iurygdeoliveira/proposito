@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubra seu Propósito</title>
+    <style>
+        /* Variáveis de Cores - Tema Escuro Moderno */
+        :root {
+            --bg-color: #121214;
+            --card-bg: #202024;
+            --text-main: #e1e1e6;
+            --text-muted: #a8a8b3;
+            --primary: #8257e5;
+            --primary-hover: #9466ff;
+            --border-radius: 8px;
+            
+            /* Cores do Diagrama (Bordas) */
+            --color-love: #e83f5b;   
+            --color-good: #f59e0b;  
+            --color-need: #10b981;  
+            --color-paid: #3b82f6;  
+            
+            /* Cor extra para botão de IA */
+            --color-ai: #10b981;
+            --color-ai-hover: #059669;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 580px; 
+            padding: 30px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .intro-text {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .intro-text strong {
+            color: var(--primary);
+        }
+
+        .textarea-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background-color: var(--bg-color);
+            border: 1px solid #323238;
+            border-radius: var(--border-radius);
+            color: var(--text-main);
+            padding: 15px;
+            font-size: 1rem;
+            resize: none;
+            transition: border 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .char-counter {
+            position: absolute;
+            bottom: -20px;
+            right: 5px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .char-counter.limit-reached {
+            color: #e83f5b;
+            font-weight: bold;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-ai {
+            background-color: var(--color-ai);
+        }
+
+        .btn-ai:hover {
+            background-color: var(--color-ai-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(130, 87, 229, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* =========================================
+           ESTILOS DO DIAGRAMA (Ajustados sem barras)
+           ========================================= */
+        .ikigai-diagram-wrapper {
+            display: flex;
+            justify-content: center;
+            overflow: auto; 
+            padding: 50px 90px; /* Aumentei o espaçamento para engolir os títulos sem gerar barra de rolagem */
+            
+            /* Ocultar barra de rolagem visualmente, mantendo o deslize em celulares menores */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        .ikigai-diagram-wrapper::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+
+        .ikigai-diagram {
+            position: relative;
+            width: 320px; /* Reduzi levemente o diagrama completo (era 340) */
+            height: 320px; 
+            margin: 0 auto;
+            flex-shrink: 0;
+        }
+
+        .ikigai-circle {
+            position: absolute;
+            width: 200px; /* Reduzi levemente os círculos (era 210) */
+            height: 200px; 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px; /* Um pouco menos de padding para aproveitar o espaço interno */
+            background-color: transparent; 
+            border: 3px solid; 
+            color: var(--text-main); 
+            overflow: hidden; 
+        }
+
+        .circle-text {
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            font-size: 0.65rem; 
+            line-height: 1.3;
+            width: 100%;
+        }
+
+        .title-out {
+            position: absolute;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            z-index: 5;
+            line-height: 1.3;
+            background-color: transparent; 
+        }
+
+        /* Ajuste fino da posição dos títulos para a nova proporção */
+        .title-out-love { top: -45px; left: 50%; transform: translateX(-50%); color: var(--color-love); text-align: center; width: 140px; }
+        .title-out-good { top: 50%; left: -90px; transform: translateY(-50%); color: var(--color-good); text-align: right; width: 85px; }
+        .title-out-need { top: 50%; right: -90px; transform: translateY(-50%); color: var(--color-need); text-align: left; width: 85px; }
+        .title-out-paid { bottom: -45px; left: 50%; transform: translateX(-50%); color: var(--color-paid); text-align: center; width: 140px; }
+
+        /* Posições dos Círculos (Matematicamente centralizados em 320px) */
+        .circle-love { top: 0; left: 60px; border-color: var(--color-love); z-index: 1; align-items: flex-start; padding-top: 35px;}
+        .circle-good { top: 60px; left: 0; border-color: var(--color-good); z-index: 2; justify-content: flex-start; padding-left: 20px; text-align: left;}
+        .circle-need { top: 60px; right: 0; border-color: var(--color-need); z-index: 3; justify-content: flex-end; padding-right: 20px; text-align: right;}
+        .circle-paid { bottom: 0; left: 60px; border-color: var(--color-paid); z-index: 4; align-items: flex-end; padding-bottom: 35px;}
+
+        .ikigai-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 900;
+            font-size: 0.8rem;
+            color: #fff;
+            z-index: 10;
+            letter-spacing: 0.5px;
+            background-color: var(--card-bg); 
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .final-reflection {
+            text-align: left;
+            margin-top: 10px;
+            border-top: 1px solid #323238;
+            padding-top: 25px;
+        }
+
+        .final-reflection h3 {
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="step active" id="step0">
+        <h2>O Mapa do Seu Propósito</h2>
+        
+        <p class="intro-text">
+            Bem-vindo(a)! Esta dinâmica foi preparada com carinho para te ajudar a refletir sobre os dons e talentos que Deus te deu.
+        </p>
+        
+        <p class="intro-text">
+            <strong>Como vai funcionar?</strong><br>
+            Você responderá a 4 perguntas curtas e diretas sobre o que você ama, no que é bom, como pode ajudar o mundo e o que te sustenta.
+        </p>
+
+        <p class="intro-text">
+            No final, o sistema vai cruzar as suas respostas em um diagrama visual. O objetivo é enxergarmos juntos qual o <strong>ponto de encontro</strong> entre as suas habilidades e o serviço à nossa comunidade.
+        </p>
+
+        <button onclick="nextStep(0)">Iniciar Dinâmica</button>
+    </div>
+    
+    <div class="step" id="step1">
+        <h2 style="color: var(--color-love);">1. O que você ama?</h2>
+        <p class="subtitle">O que você ama fazer. Não o que você acha que deveria amar. O que você faz e o tempo passa sem você perceber.</p>
+        <div class="textarea-wrapper">
+            <textarea id="q1" maxlength="500" oninput="updateCounter(1)" placeholder="Ex: Ler, conversar, ajudar pessoas, estudar..."></textarea>
+            <div class="char-counter" id="counter1">0 / 500</div>
+        </div>
+        <button onclick="nextStep(1)">Próximo Passo</button>
+    </div>
+
+    <div class="step" id="step2">
+        <h2 style="color: var(--color-good);">2. No que você é bom?</h2>
+        <p class="subtitle">O que você é bom. Não o que você acha que é bom. O que as pessoas pagam pra ver você fazer, ou pedem sua ajuda quando precisam.</p>
+        <div class="textarea-wrapper">
+            <textarea id="q2" maxlength="500" oninput="updateCounter(2)" placeholder="Ex: Sou bom em ouvir, aconselhar, organizar coisas..."></textarea>
+            <div class="char-counter" id="counter2">0 / 500</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-secondary" onclick="prevStep(2)">Voltar</button>
+            <button onclick="nextStep(2)">Próximo Passo</button>
+        </div>
+    </div>
+
+    <div class="step" id="step3">
+        <h2 style="color: var(--color-need);">3. O que o mundo precisa?</h2>
+        <p class="subtitle">O que o mundo precisa. Existe uma dor real que o que você faz resolve? Ou você está fazendo algo que é bonito mas que ninguém estava pedindo?</p>
+        <div class="textarea-wrapper">
+            <textarea id="q3" maxlength="500" oninput="updateCounter(3)" placeholder="Ex: Acolhimento para jovens, apoio emocional, educação..."></textarea>
+            <div class="char-counter" id="counter3">0 / 500</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-secondary" onclick="prevStep(3)">Voltar</button>
+            <button onclick="nextStep(3)">Próximo Passo</button>
+        </div>
+    </div>
+
+    <div class="step" id="step4">
+        <h2 style="color: var(--color-paid);">4. Pelo que pode ser pago?</h2>
+        <p class="subtitle">O que te paga. Porque querer mudar o mundo é lindo, mas a conta precisa fechar.</p>
+        <div class="textarea-wrapper">
+            <textarea id="q4" maxlength="500" oninput="updateCounter(4)" placeholder="Ex: Programação, design, vendas, professor..."></textarea>
+            <div class="char-counter" id="counter4">0 / 500</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-secondary" onclick="prevStep(4)">Voltar</button>
+            <button onclick="generateResult()">Ver meu Diagrama</button>
+        </div>
+    </div>
+
+    <div class="step" id="step-result">
+        <h2>O Mapa do seu Propósito</h2>
+        <p class="subtitle" style="text-align: center;">Aqui estão suas respostas integradas visualmente.</p>
+        
+        <div class="ikigai-diagram-wrapper">
+            <div class="ikigai-diagram">
+                
+                <div class="title-out title-out-love">O que você<br>Ama</div>
+                <div class="title-out title-out-good">No que<br>é Bom</div>
+                <div class="title-out title-out-need">Mundo<br>Precisa</div>
+                <div class="title-out title-out-paid">Sua<br>Profissão</div>
+
+                <div class="ikigai-circle circle-love"><span class="circle-text" id="diag-res1"></span></div>
+                <div class="ikigai-circle circle-good"><span class="circle-text" id="diag-res2"></span></div>
+                <div class="ikigai-circle circle-need"><span class="circle-text" id="diag-res3"></span></div>
+                <div class="ikigai-circle circle-paid"><span class="circle-text" id="diag-res4"></span></div>
+                
+                <div class="ikigai-center">PROPÓSITO</div>
+            </div>
+        </div>
+
+        <div class="final-reflection">
+            <h3>Qual é o seu propósito?</h3>
+            <textarea id="final_answer" placeholder="Olhando para as conexões do diagrama acima, tente definir o seu propósito em uma frase..."></textarea>
+            
+            <div class="action-buttons">
+                <button onclick="copyData('save')">📋 Copiar e Salvar Respostas</button>
+                <button class="btn-ai" onclick="copyData('ai')">🤖 Consultar IA (Copiar Prompt)</button>
+                <button class="btn-secondary" onclick="resetApp()">Fazer Novamente</button>
+            </div>
+        </div>
+        
+    </div>
+
+</div>
+
+<script>
+    function updateCounter(step) {
+        const textarea = document.getElementById(`q${step}`);
+        const counter = document.getElementById(`counter${step}`);
+        const length = textarea.value.length;
+        
+        counter.innerText = `${length} / 500`;
+        
+        if (length >= 500) {
+            counter.classList.add('limit-reached');
+        } else {
+            counter.classList.remove('limit-reached');
+        }
+    }
+
+    function nextStep(current) {
+        if (current > 0) {
+            const answer = document.getElementById(`q${current}`).value.trim();
+            
+            if(!answer) {
+                alert('Por favor, escreva um pouquinho antes de avançar! 😊');
+                return;
+            }
+
+            if(answer.length > 500) {
+                alert('Você ultrapassou o limite de 500 caracteres. Por favor, resuma um pouco mais sua resposta.');
+                return;
+            }
+        }
+
+        document.getElementById(`step${current}`).classList.remove('active');
+        document.getElementById(`step${current + 1}`).classList.add('active');
+    }
+
+    function prevStep(current) {
+        document.getElementById(`step${current}`).classList.remove('active');
+        document.getElementById(`step${current - 1}`).classList.add('active');
+    }
+
+    function generateResult() {
+        const q4 = document.getElementById('q4').value.trim();
+        
+        if(!q4) {
+            alert('Preencha este último campo para vermos o resultado! 😊');
+            return;
+        }
+
+        if(q4.length > 500) {
+            alert('Você ultrapassou o limite de 500 caracteres. Por favor, resuma um pouco mais sua resposta.');
+            return;
+        }
+
+        document.getElementById('diag-res1').innerText = document.getElementById('q1').value;
+        document.getElementById('diag-res2').innerText = document.getElementById('q2').value;
+        document.getElementById('diag-res3').innerText = document.getElementById('q3').value;
+        document.getElementById('diag-res4').innerText = document.getElementById('q4').value;
+
+        document.getElementById('step4').classList.remove('active');
+        document.getElementById('step-result').classList.add('active');
+    }
+
+    function copyData(actionType) {
+        const q1 = document.getElementById('q1').value.trim();
+        const q2 = document.getElementById('q2').value.trim();
+        const q3 = document.getElementById('q3').value.trim();
+        const q4 = document.getElementById('q4').value.trim();
+        const finalAnswer = document.getElementById('final_answer').value.trim();
+
+        let textToCopy = "";
+
+        if (actionType === 'save') {
+            textToCopy = `MEU MAPA DO PROPÓSITO\n\n` +
+                         `1. O que eu amo:\n${q1}\n\n` +
+                         `2. No que sou bom:\n${q2}\n\n` +
+                         `3. O que o mundo precisa:\n${q3}\n\n` +
+                         `4. Minha Profissão/Sustento:\n${q4}\n\n` +
+                         `Propósito Definido:\n${finalAnswer || "Ainda não definido."}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("✅ Suas respostas foram copiadas! Cole no seu bloco de notas ou WhatsApp para salvar.");
+            }).catch(err => {
+                alert("Erro ao copiar. Tente selecionar o texto manualmente.");
+            });
+
+        } else if (actionType === 'ai') {
+            textToCopy = `Atue como um conselheiro vocacional cristão com profundo conhecimento em desenvolvimento pessoal, teologia prática e orientação de carreira baseada em propósito.\n\n` +
+                         `Eu realizei um exercício de autoconhecimento inspirado no Ikigai e cheguei aos seguintes resultados:\n\n` +
+                         `- **O que eu amo fazer:** ${q1}\n` +
+                         `- **No que eu sou bom (talentos e dons):** ${q2}\n` +
+                         `- **O que o mundo/minha comunidade precisa:** ${q3}\n` +
+                         `- **Como posso gerar sustento (profissão/vocação):** ${q4}\n` +
+                         `- **A frase que resumiu meu propósito:** ${finalAnswer || "Ainda não consegui definir"}\n\n` +
+                         `Com base nessas informações, faça uma análise profunda e integrada do meu perfil seguindo estas diretrizes:\n\n` +
+                         `**Análise das conexões:** Identifique padrões, sobreposições e tensões entre as cinco áreas. Onde elas se reforçam mutuamente? Onde existe conflito ou lacuna que precisa ser trabalhada?\n\n` +
+                         `**Perspectiva cristã:** Relacione meu perfil com princípios bíblicos sobre chamado, dons e serviço — não de forma genérica, mas aplicado diretamente ao que eu descrevi. Cite passagens relevantes apenas quando iluminarem genuinamente minha situação.\n\n` +
+                         `**Caminhos práticos:** Sugira próximos passos concretos e realizáveis para viver esse propósito no cotidiano — tanto na vida profissional quanto no serviço à comunidade. Priorize ações que eu possa começar agora.\n\n` +
+                         `**Alertas e pontos de atenção:** Aponte honestamente os riscos, armadilhas ou áreas de crescimento que meu perfil revela, com orientação sobre como lidar com eles.\n\n` +
+                         `Seja direto, específico e pastoral — fale como um mentor de confiança que conhece minha situação, não como um sistema que gera respostas genéricas.`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("🤖 Prompt copiado com sucesso! Agora é só abrir o ChatGPT, Gemini ou Claude e colar o texto lá para receber sua análise profunda.");
+            }).catch(err => {
+                alert("Erro ao copiar o prompt. Tente novamente.");
+            });
+        }
+    }
+
+    function resetApp() {
+        for(let i = 1; i <= 4; i++) {
+            document.getElementById(`q${i}`).value = '';
+            updateCounter(i); 
+        }
+        document.getElementById('final_answer').value = '';
+
+        document.getElementById('step-result').classList.remove('active');
+        document.getElementById('step0').classList.add('active');
+        
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
