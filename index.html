@@ -15,13 +15,11 @@
             --primary-hover: #9466ff;
             --border-radius: 8px;
             
-            /* Cores do Diagrama (Bordas) */
             --color-love: #e83f5b;   
             --color-good: #f59e0b;  
             --color-need: #10b981;  
             --color-paid: #3b82f6;  
             
-            /* Cor extra para botão de IA */
             --color-ai: #10b981;
             --color-ai-hover: #059669;
         }
@@ -53,26 +51,16 @@
             text-align: center;
         }
 
-        .step {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .step.active {
-            display: block;
-        }
+        .step { display: none; animation: fadeIn 0.4s ease; }
+        .step.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 {
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            color: var(--text-main);
-        }
-
+        h2 { margin-bottom: 15px; font-size: 1.5rem; color: var(--text-main); }
+        
         p.subtitle {
             color: var(--text-muted);
             margin-bottom: 25px;
@@ -89,14 +77,9 @@
             text-align: left;
         }
 
-        .intro-text strong {
-            color: var(--primary);
-        }
+        .intro-text strong { color: var(--primary); }
 
-        .textarea-wrapper {
-            position: relative;
-            margin-bottom: 25px;
-        }
+        .textarea-wrapper { position: relative; margin-bottom: 25px; }
 
         textarea {
             width: 100%;
@@ -111,10 +94,7 @@
             transition: border 0.3s;
         }
 
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
+        textarea:focus { outline: none; border-color: var(--primary); }
 
         .char-counter {
             position: absolute;
@@ -124,10 +104,7 @@
             color: var(--text-muted);
         }
 
-        .char-counter.limit-reached {
-            color: #e83f5b;
-            font-weight: bold;
-        }
+        .char-counter.limit-reached { color: #e83f5b; font-weight: bold; }
 
         button {
             background-color: var(--primary);
@@ -143,27 +120,16 @@
             margin-top: 10px;
         }
 
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-ai {
-            background-color: var(--color-ai);
-        }
-
-        .btn-ai:hover {
-            background-color: var(--color-ai-hover);
-        }
-
+        button:hover { background-color: var(--primary-hover); }
+        .btn-ai { background-color: var(--color-ai); }
+        .btn-ai:hover { background-color: var(--color-ai-hover); }
+        
         .btn-secondary {
             background-color: transparent;
             border: 1px solid var(--primary);
             color: var(--primary);
         }
-
-        .btn-secondary:hover {
-            background-color: rgba(130, 87, 229, 0.1);
-        }
+        .btn-secondary:hover { background-color: rgba(130, 87, 229, 0.1); }
 
         .action-buttons {
             display: flex;
@@ -173,41 +139,48 @@
         }
 
         /* =========================================
-           ESTILOS DO DIAGRAMA (Ajustados sem barras)
+           ESTILOS DO DIAGRAMA (NOVA CAIXA RECALCULADA)
            ========================================= */
         .ikigai-diagram-wrapper {
             display: flex;
-            justify-content: center;
-            overflow: auto; 
-            padding: 50px 90px; /* Aumentei o espaçamento para engolir os títulos sem gerar barra de rolagem */
+            width: 100%;
+            overflow-x: auto; 
+            padding: 10px 0 20px 0; 
             
-            /* Ocultar barra de rolagem visualmente, mantendo o deslize em celulares menores */
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            /* Ocultar barra de rolagem visualmente */
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
         }
 
         .ikigai-diagram-wrapper::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera */
+            display: none; 
+        }
+
+        /* Truque mágico para não cortar o lado esquerdo no celular */
+        .ikigai-diagram-wrapper::before,
+        .ikigai-diagram-wrapper::after {
+            content: '';
+            margin: auto;
         }
 
         .ikigai-diagram {
             position: relative;
-            width: 320px; /* Reduzi levemente o diagrama completo (era 340) */
-            height: 320px; 
-            margin: 0 auto;
+            /* Caixa estendida para abraçar os títulos perfeitamente */
+            width: 470px; 
+            height: 420px; 
             flex-shrink: 0;
         }
 
         .ikigai-circle {
             position: absolute;
-            width: 200px; /* Reduzi levemente os círculos (era 210) */
-            height: 200px; 
+            width: 190px; 
+            height: 190px; 
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px; /* Um pouco menos de padding para aproveitar o espaço interno */
+            padding: 15px; 
             background-color: transparent; 
             border: 3px solid; 
             color: var(--text-main); 
@@ -226,24 +199,25 @@
             position: absolute;
             font-weight: 900;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 1px;
             z-index: 5;
             line-height: 1.3;
             background-color: transparent; 
         }
 
-        /* Ajuste fino da posição dos títulos para a nova proporção */
-        .title-out-love { top: -45px; left: 50%; transform: translateX(-50%); color: var(--color-love); text-align: center; width: 140px; }
-        .title-out-good { top: 50%; left: -90px; transform: translateY(-50%); color: var(--color-good); text-align: right; width: 85px; }
-        .title-out-need { top: 50%; right: -90px; transform: translateY(-50%); color: var(--color-need); text-align: left; width: 85px; }
-        .title-out-paid { bottom: -45px; left: 50%; transform: translateX(-50%); color: var(--color-paid); text-align: center; width: 140px; }
+        /* Títulos e Círculos agora 100% contidos na caixa 470x420 */
+        .title-out-love { top: 0px; left: 50%; transform: translateX(-50%); color: var(--color-love); text-align: center; width: 140px; }
+        .circle-love    { top: 50px; left: 140px; border-color: var(--color-love); z-index: 1; align-items: flex-start; padding-top: 30px;}
 
-        /* Posições dos Círculos (Matematicamente centralizados em 320px) */
-        .circle-love { top: 0; left: 60px; border-color: var(--color-love); z-index: 1; align-items: flex-start; padding-top: 35px;}
-        .circle-good { top: 60px; left: 0; border-color: var(--color-good); z-index: 2; justify-content: flex-start; padding-left: 20px; text-align: left;}
-        .circle-need { top: 60px; right: 0; border-color: var(--color-need); z-index: 3; justify-content: flex-end; padding-right: 20px; text-align: right;}
-        .circle-paid { bottom: 0; left: 60px; border-color: var(--color-paid); z-index: 4; align-items: flex-end; padding-bottom: 35px;}
+        .title-out-good { top: 50%; left: 0px; transform: translateY(-50%); color: var(--color-good); text-align: right; width: 70px; }
+        .circle-good    { top: 115px; left: 80px; border-color: var(--color-good); z-index: 2; justify-content: flex-start; padding-left: 20px; text-align: left;}
+
+        .title-out-need { top: 50%; right: 0px; transform: translateY(-50%); color: var(--color-need); text-align: left; width: 70px; }
+        .circle-need    { top: 115px; right: 80px; border-color: var(--color-need); z-index: 3; justify-content: flex-end; padding-right: 20px; text-align: right;}
+
+        .title-out-paid { bottom: 0px; left: 50%; transform: translateX(-50%); color: var(--color-paid); text-align: center; width: 140px; }
+        .circle-paid    { bottom: 50px; left: 140px; border-color: var(--color-paid); z-index: 4; align-items: flex-end; padding-bottom: 30px;}
 
         .ikigai-center {
             position: absolute;
@@ -283,20 +257,9 @@
 
     <div class="step active" id="step0">
         <h2>O Mapa do Seu Propósito</h2>
-        
-        <p class="intro-text">
-            Bem-vindo(a)! Esta dinâmica foi preparada com carinho para te ajudar a refletir sobre os dons e talentos que Deus te deu.
-        </p>
-        
-        <p class="intro-text">
-            <strong>Como vai funcionar?</strong><br>
-            Você responderá a 4 perguntas curtas e diretas sobre o que você ama, no que é bom, como pode ajudar o mundo e o que te sustenta.
-        </p>
-
-        <p class="intro-text">
-            No final, o sistema vai cruzar as suas respostas em um diagrama visual. O objetivo é enxergarmos juntos qual o <strong>ponto de encontro</strong> entre as suas habilidades e o serviço à nossa comunidade.
-        </p>
-
+        <p class="intro-text">Bem-vindo(a)! Esta dinâmica foi preparada com carinho para te ajudar a refletir sobre os dons e talentos que Deus te deu.</p>
+        <p class="intro-text"><strong>Como vai funcionar?</strong><br>Você responderá a 4 perguntas curtas e diretas sobre o que você ama, no que é bom, como pode ajudar o mundo e o que te sustenta.</p>
+        <p class="intro-text">No final, o sistema vai cruzar as suas respostas em um diagrama visual. O objetivo é enxergarmos juntos qual o <strong>ponto de encontro</strong> entre as suas habilidades e o serviço à nossa comunidade.</p>
         <button onclick="nextStep(0)">Iniciar Dinâmica</button>
     </div>
     
